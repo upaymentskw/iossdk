@@ -1,0 +1,11 @@
+framework module AliPaymentGateway {
+  umbrella header "AliPaymentGateway.h"
+
+  export *
+  module * { export * }
+}
+
+module AliPaymentGateway.Swift {
+  header "AliPaymentGateway-Swift.h"
+  requires objc
+}

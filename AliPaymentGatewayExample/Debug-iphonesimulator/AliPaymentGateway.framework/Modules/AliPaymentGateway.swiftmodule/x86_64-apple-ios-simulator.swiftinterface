@@ -1,0 +1,535 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.7.1 (swiftlang-5.7.1.135.3 clang-1400.0.29.51)
+// swift-module-flags: -target x86_64-apple-ios13.1-simulator -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -Onone -module-name AliPaymentGateway
+// swift-module-flags-ignorable: -enable-bare-slash-regex
+@_exported import AliPaymentGateway
+import Foundation
+import Swift
+import UIKit
+import WebKit
+import _Concurrency
+import _StringProcessing
+@objc @_inheritsConvenienceInitializers @_Concurrency.MainActor(unsafe) public class WebViewController : UIKit.UIViewController {
+  @_Concurrency.MainActor(unsafe) public var completionHandler: ((_ response: AliPaymentGateway.PaymentResponse) -> Swift.Void)?
+  @_Concurrency.MainActor(unsafe) public var url: Foundation.URL?
+  @_Concurrency.MainActor(unsafe) public var paymentParameter: AliPaymentGateway.CreatePaymentRequest?
+  @_Concurrency.MainActor(unsafe) public var backFleg: Swift.Bool?
+  @_Concurrency.MainActor(unsafe) @objc override dynamic public func viewDidLoad()
+  @_Concurrency.MainActor(unsafe) @objc override dynamic public func viewDidDisappear(_ animated: Swift.Bool)
+  @_Concurrency.MainActor(unsafe) @objc override dynamic public func loadView()
+  @_Concurrency.MainActor(unsafe) @objc override dynamic public init(nibName nibNameOrNil: Swift.String?, bundle nibBundleOrNil: Foundation.Bundle?)
+  @_Concurrency.MainActor(unsafe) @objc required dynamic public init?(coder: Foundation.NSCoder)
+  @objc deinit
+}
+extension AliPaymentGateway.WebViewController : WebKit.WKNavigationDelegate {
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func webView(_ webView: WebKit.WKWebView, didFinish navigation: WebKit.WKNavigation!)
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func webView(_ webView: WebKit.WKWebView, didReceiveServerRedirectForProvisionalNavigation navigation: WebKit.WKNavigation!)
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func webView(_ webView: WebKit.WKWebView, didStartProvisionalNavigation navigation: WebKit.WKNavigation!)
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func webView(_ webView: WebKit.WKWebView, decidePolicyFor navigationAction: WebKit.WKNavigationAction, decisionHandler: @escaping (WebKit.WKNavigationActionPolicy) -> Swift.Void)
+}
+extension AliPaymentGateway.WebViewController : UIKit.UIScrollViewDelegate {
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func scrollViewWillBeginZooming(_ scrollView: UIKit.UIScrollView, with view: UIKit.UIView?)
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func viewForZooming(in scrollView: UIKit.UIScrollView) -> UIKit.UIView?
+}
+public struct HUNetworkError : Swift.Error {
+  public let reason: Swift.String?
+  public let httpStatusCode: Swift.Int?
+  public init(reason: Swift.String? = nil, httpStatusCode: Swift.Int? = nil)
+}
+public enum HUHttpMethods : Swift.String {
+  case get
+  case post
+  case put
+  case delete
+  public init?(rawValue: Swift.String)
+  public typealias RawValue = Swift.String
+  public var rawValue: Swift.String {
+    get
+  }
+}
+public struct HttpUtility {
+  public init(token: Swift.String?)
+  public init(token: Swift.String?, decoder: Foundation.JSONDecoder?)
+  public init(WithJsonDecoder decoder: Foundation.JSONDecoder)
+  public init()
+  public func request<T>(requestUrl: Swift.String, method: AliPaymentGateway.HUHttpMethods, requestBody: Foundation.Data? = nil, resultType: T.Type, completionHandler: @escaping (Swift.Result<T?, AliPaymentGateway.HUNetworkError>) -> Swift.Void) where T : Swift.Decodable
+}
+public struct Approved {
+}
+public struct RefundRequest : Swift.Codable {
+  public var orderId: Swift.String?
+  public var totalPrice: Swift.Int?
+  public var customerFirstName: Swift.String?
+  public var customerEmail: Swift.String?
+  public var customerMobileNumber: Swift.String?
+  public var reference: Swift.String?
+  public var notifyUrl: Swift.String?
+  public init(orderId: Swift.String? = nil, totalPrice: Swift.Int? = nil, customerFirstName: Swift.String? = nil, customerEmail: Swift.String? = nil, customerMobileNumber: Swift.String? = nil, reference: Swift.String? = nil, notifyUrl: Swift.String? = nil)
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct RefundResponse : Swift.Codable {
+  public var status: Swift.Bool?
+  public var message: Swift.String?
+  public var data: AliPaymentGateway.RefundResponseData?
+  public init(status: Swift.Bool? = nil, message: Swift.String? = nil, data: AliPaymentGateway.RefundResponseData? = nil)
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct RefundResponseData : Swift.Codable {
+  public var error_code: Swift.String?
+  public init(error_code: Swift.String? = nil)
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct MultiVanderRefundRequest : Swift.Codable {
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct ExtraMerchantData : Swift.Codable {
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public protocol AllPaymentStoreUseCase : AliPaymentGateway.UseCase {
+  func makePostCall(backFleg: Swift.Bool, headerToken: Swift.String, paymentDetails: AliPaymentGateway.CreatePaymentRequest, controller: UIKit.UIViewController, completionHandler: @escaping (Swift.Result<AliPaymentGateway.PaymentResponse, AliPaymentGateway.HUNetworkError>) -> Swift.Void)
+  func createTokenPostCall(headerToken: Swift.String, tokenDetails: AliPaymentGateway.GenerateTokenReqModel, controller: UIKit.UIViewController, completionHandler: @escaping (Swift.Result<AliPaymentGateway.GenerateTokenResModel, AliPaymentGateway.HUNetworkError>) -> Swift.Void)
+  func retriveCardDetails(headerToken: Swift.String, retCardDetReq: [Swift.String : Any], controller: UIKit.UIViewController, completionHandler: @escaping (Swift.Result<[Swift.String : Any], AliPaymentGateway.HUNetworkError>) -> Swift.Void)
+  func addCardDetails(headerToken: Swift.String, addCardRequest: [Swift.String : Any], controller: UIKit.UIViewController, completionHandler: @escaping (Swift.Result<[Swift.String : Any], AliPaymentGateway.HUNetworkError>) -> Swift.Void)
+  func getRefundDetails(headerToken: Swift.String, refundRequest: [Swift.String : Any], controller: UIKit.UIViewController, completionHandler: @escaping (Swift.Result<[Swift.String : Any], AliPaymentGateway.HUNetworkError>) -> Swift.Void)
+  func getCheckPaymentButtonStatus(headerToken: Swift.String, controller: UIKit.UIViewController, completionHandler: @escaping (Swift.Result<AliPaymentGateway.CheckPaymentButtonStatusResponse, AliPaymentGateway.HUNetworkError>) -> Swift.Void)
+  func getCheckPaymentStatus(headerToken: Swift.String, strTrackId: Swift.String, controller: UIKit.UIViewController, completionHandler: @escaping (Swift.Result<AliPaymentGateway.PaymentStatusResponse, AliPaymentGateway.HUNetworkError>) -> Swift.Void)
+  func getMultipleRefundDetails(headerToken: Swift.String, multipleRefundRequest: [Swift.String : Any], controller: UIKit.UIViewController, completionHandler: @escaping (Swift.Result<[Swift.String : Any], AliPaymentGateway.HUNetworkError>) -> Swift.Void)
+  func createInvoiceApi(headerToken: Swift.String, createInvoicexRequest: [Swift.String : Any], controller: UIKit.UIViewController, completionHandler: @escaping (Swift.Result<[Swift.String : Any], AliPaymentGateway.HUNetworkError>) -> Swift.Void)
+  func deleteRefundApi(headerToken: Swift.String, deleteRefundRequest: [Swift.String : Any], controller: UIKit.UIViewController, completionHandler: @escaping (Swift.Result<[Swift.String : Any], AliPaymentGateway.HUNetworkError>) -> Swift.Void)
+  func deleteMultiVendorRefundApi(headerToken: Swift.String, deleteMultiVenderRefundRequest: [Swift.String : Any], controller: UIKit.UIViewController, completionHandler: @escaping (Swift.Result<[Swift.String : Any], AliPaymentGateway.HUNetworkError>) -> Swift.Void)
+  func changeBaseUrl(urlType: Swift.String)
+}
+@objc @_inheritsConvenienceInitializers public class AllPaymentStoreImplementation : ObjectiveC.NSObject, AliPaymentGateway.AllPaymentStoreUseCase {
+  public func changeBaseUrl(urlType: Swift.String)
+  public func makePostCall(backFleg: Swift.Bool, headerToken: Swift.String, paymentDetails: AliPaymentGateway.CreatePaymentRequest, controller: UIKit.UIViewController, completionHandler: @escaping (Swift.Result<AliPaymentGateway.PaymentResponse, AliPaymentGateway.HUNetworkError>) -> Swift.Void)
+  @objc override dynamic public init()
+  public func createTokenPostCall(headerToken: Swift.String, tokenDetails: AliPaymentGateway.GenerateTokenReqModel, controller: UIKit.UIViewController, completionHandler: @escaping (Swift.Result<AliPaymentGateway.GenerateTokenResModel, AliPaymentGateway.HUNetworkError>) -> Swift.Void)
+  public func retriveCardDetails(headerToken: Swift.String, retCardDetReq: [Swift.String : Any], controller: UIKit.UIViewController, completionHandler: @escaping (Swift.Result<[Swift.String : Any], AliPaymentGateway.HUNetworkError>) -> Swift.Void)
+  public func addCardDetails(headerToken: Swift.String, addCardRequest: [Swift.String : Any], controller: UIKit.UIViewController, completionHandler: @escaping (Swift.Result<[Swift.String : Any], AliPaymentGateway.HUNetworkError>) -> Swift.Void)
+  public func getRefundDetails(headerToken: Swift.String, refundRequest: [Swift.String : Any], controller: UIKit.UIViewController, completionHandler: @escaping (Swift.Result<[Swift.String : Any], AliPaymentGateway.HUNetworkError>) -> Swift.Void)
+  public func getCheckPaymentButtonStatus(headerToken: Swift.String, controller: UIKit.UIViewController, completionHandler: @escaping (Swift.Result<AliPaymentGateway.CheckPaymentButtonStatusResponse, AliPaymentGateway.HUNetworkError>) -> Swift.Void)
+  public func getCheckPaymentStatus(headerToken: Swift.String, strTrackId: Swift.String, controller: UIKit.UIViewController, completionHandler: @escaping (Swift.Result<AliPaymentGateway.PaymentStatusResponse, AliPaymentGateway.HUNetworkError>) -> Swift.Void)
+  public func getMultipleRefundDetails(headerToken: Swift.String, multipleRefundRequest: [Swift.String : Any], controller: UIKit.UIViewController, completionHandler: @escaping (Swift.Result<[Swift.String : Any], AliPaymentGateway.HUNetworkError>) -> Swift.Void)
+  public func createInvoiceApi(headerToken: Swift.String, createInvoicexRequest: [Swift.String : Any], controller: UIKit.UIViewController, completionHandler: @escaping (Swift.Result<[Swift.String : Any], AliPaymentGateway.HUNetworkError>) -> Swift.Void)
+  public func deleteRefundApi(headerToken: Swift.String, deleteRefundRequest: [Swift.String : Any], controller: UIKit.UIViewController, completionHandler: @escaping (Swift.Result<[Swift.String : Any], AliPaymentGateway.HUNetworkError>) -> Swift.Void)
+  public func deleteMultiVendorRefundApi(headerToken: Swift.String, deleteMultiVenderRefundRequest: [Swift.String : Any], controller: UIKit.UIViewController, completionHandler: @escaping (Swift.Result<[Swift.String : Any], AliPaymentGateway.HUNetworkError>) -> Swift.Void)
+  @objc deinit
+}
+public struct CreatePaymentResponse : Swift.Codable {
+  public var status: Swift.Bool?
+  public var message: Swift.String?
+  public var data: AliPaymentGateway.PaymentResponseData?
+  public init(status: Swift.Bool? = nil, message: Swift.String? = nil, data: AliPaymentGateway.PaymentResponseData? = nil)
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct PaymentResponseData : Swift.Codable {
+  public var link: Swift.String?
+  public var trackId: Swift.String?
+  public init(link: Swift.String? = nil, trackId: Swift.String? = nil)
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct CreatePaymentRequest : Swift.Codable {
+  public let product: [AliPaymentGateway.Product]?
+  public let extraMerchantData: [AliPaymentGateway.ExtraMerchantDatum]?
+  public let sessionID: Swift.String?
+  public let isTest: Swift.Bool?
+  public let order: AliPaymentGateway.Order?
+  public let paymentGateway: AliPaymentGateway.PaymentGateway?
+  public let notificationType: Swift.String?, language: Swift.String?
+  public let isSaveCard: Swift.Bool?, isWhitelabled: Swift.Bool?
+  public let tokens: AliPaymentGateway.Tokens?
+  public let reference: AliPaymentGateway.Reference?
+  public let customer: AliPaymentGateway.Customer?
+  public let plugin: AliPaymentGateway.Plugin?
+  public let customerExtraData: Swift.String?
+  public let returnURL: Swift.String?, cancelURL: Swift.String?, notificationURL: Swift.String?
+  public let device: AliPaymentGateway.Device?
+  public init(product: [AliPaymentGateway.Product]? = nil, extraMerchantData: [AliPaymentGateway.ExtraMerchantDatum]? = nil, sessionID: Swift.String? = nil, isTest: Swift.Bool? = nil, order: AliPaymentGateway.Order? = nil, paymentGateway: AliPaymentGateway.PaymentGateway? = nil, notificationType: Swift.String? = nil, language: Swift.String? = nil, isSaveCard: Swift.Bool? = nil, isWhitelabled: Swift.Bool? = nil, tokens: AliPaymentGateway.Tokens? = nil, reference: AliPaymentGateway.Reference? = nil, customer: AliPaymentGateway.Customer? = nil, plugin: AliPaymentGateway.Plugin? = nil, customerExtraData: Swift.String? = nil, returnURL: Swift.String? = nil, cancelURL: Swift.String? = nil, notificationURL: Swift.String? = nil, device: AliPaymentGateway.Device? = nil)
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct Customer : Swift.Codable {
+  public let uniqueID: Swift.String?, name: Swift.String?, email: Swift.String?, mobile: Swift.String?
+  public init(uniqueID: Swift.String? = nil, name: Swift.String? = nil, email: Swift.String? = nil, mobile: Swift.String? = nil)
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct Device : Swift.Codable {
+  public let browser: Swift.String?
+  public let browserDetails: AliPaymentGateway.BrowserDetails?
+  public init(browser: Swift.String? = nil, browserDetails: AliPaymentGateway.BrowserDetails? = nil)
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct BrowserDetails : Swift.Codable {
+  public let screenWidth: Swift.String?, screenHeight: Swift.String?, colorDepth: Swift.String?, javaEnabled: Swift.String?
+  public let language: Swift.String?, timeZone: Swift.String?
+  public init(screenWidth: Swift.String? = nil, screenHeight: Swift.String? = nil, colorDepth: Swift.String? = nil, javaEnabled: Swift.String? = nil, language: Swift.String? = nil, timeZone: Swift.String? = nil)
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct Order : Swift.Codable {
+  public let id: Swift.String?, reference: Swift.String?, description: Swift.String?, currency: Swift.String?
+  public let amount: Swift.Double?
+  public init(id: Swift.String? = nil, reference: Swift.String? = nil, description: Swift.String? = nil, currency: Swift.String? = nil, amount: Swift.Double? = nil)
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct PaymentGateway : Swift.Codable {
+  public let src: Swift.String?
+  public init(src: Swift.String? = nil)
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct Product : Swift.Codable {
+  public let name: Swift.String?, description: Swift.String?
+  public let price: Swift.Int?, quantity: Swift.Int?
+  public init(name: Swift.String? = nil, description: Swift.String? = nil, price: Swift.Int? = nil, quantity: Swift.Int? = nil)
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct ExtraMerchantDatum : Swift.Codable {
+  public let amount: Swift.Double?, knetCharge: Swift.Double?
+  public let knetChargeType: Swift.String?
+  public let ccCharge: Swift.Double?
+  public let ccChargeType: Swift.String?, ibanNumber: Swift.String?
+  public init(amount: Swift.Double? = nil, knetCharge: Swift.Double? = nil, knetChargeType: Swift.String? = nil, ccCharge: Swift.Double? = nil, ccChargeType: Swift.String? = nil, ibanNumber: Swift.String? = nil)
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct Reference : Swift.Codable {
+  public let id: Swift.String?
+  public init(id: Swift.String? = nil)
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct Tokens : Swift.Codable {
+  public let kFast: Swift.String?
+  public let creditCard: Swift.String?, customerUniqueToken: Swift.String?
+  public init(kFast: Swift.String? = nil, creditCard: Swift.String? = nil, customerUniqueToken: Swift.String? = nil)
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct Plugin : Swift.Codable {
+  public var src: Swift.String?
+  public init(src: Swift.String? = nil)
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct GenerateTokenReqModel : Swift.Codable {
+  public var customerUniqueToken: Swift.String?
+  public init(customerUniqueToken: Swift.String? = nil)
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct GenerateTokenResModel : Swift.Codable {
+  public var status: Swift.Bool?
+  public var message: Swift.String?
+  public var data: AliPaymentGateway.TokenData?
+  public init(status: Swift.Bool? = nil, message: Swift.String? = nil, data: AliPaymentGateway.TokenData? = nil)
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct MerchantCustomer : Swift.Codable {
+  public var merchantCustomerId: Swift.String?
+  public var merchantId: Swift.Int?
+  public var updatedAt: Swift.String?
+  public var createdAt: Swift.String?
+  public var id: Swift.Int?
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct TokenData : Swift.Codable {
+  public var customerUniqueToken: Swift.Int?
+  public init(customerUniqueToken: Swift.Int? = nil)
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+@objc public class Card : ObjectiveC.NSObject, Swift.Codable {
+  final public let number: Swift.String
+  final public let expiryMonth: Swift.String
+  final public let expiryYear: Swift.String
+  final public let brand: Swift.String
+  final public let issuer: Swift.String?
+  @objc deinit
+  public func encode(to encoder: Swift.Encoder) throws
+  required public init(from decoder: Swift.Decoder) throws
+}
+public struct RetreiveCardRequest : Swift.Codable {
+  public var customerUniqueToken: Swift.Int?
+  public init(customerUniqueToken: Swift.Int? = nil)
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct RetreiveCardResponse : Swift.Codable {
+  public let status: Swift.Bool?
+  public let message: Swift.String?
+  public let data: AliPaymentGateway.RetData?
+  public init(status: Swift.Bool? = nil, message: Swift.String? = nil, data: AliPaymentGateway.RetData? = nil)
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct Provideds : Swift.Codable {
+  public let card: AliPaymentGateway.RetCard?
+  public init(card: AliPaymentGateway.RetCard? = nil)
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct SourceOfFundss : Swift.Codable {
+  public let provided: AliPaymentGateway.Provideds?
+  public let type: Swift.String?
+  public init(provided: AliPaymentGateway.Provideds? = nil, type: Swift.String? = nil)
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct Usages : Swift.Codable {
+  public let lastUpdated: Swift.String?
+  public let lastUpdatedBy: Swift.String?
+  public let lastUsed: Swift.String?
+  public init(lastUpdated: Swift.String? = nil, lastUpdatedBy: Swift.String? = nil, lastUsed: Swift.String? = nil)
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct RetData : Swift.Codable {
+  public let customerCards: [AliPaymentGateway.CustomerCardss]?
+  public init(customerCards: [AliPaymentGateway.CustomerCardss]? = nil)
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct CustomerCardss : Swift.Codable {
+  public let repositoryId: Swift.String?
+  public let result: Swift.String?
+  public let sourceOfFunds: AliPaymentGateway.SourceOfFunds?
+  public let status: Swift.String?
+  public let token: Swift.String?
+  public let usage: AliPaymentGateway.Usages?
+  public let verificationStrategy: Swift.String?
+  public init(repositoryId: Swift.String? = nil, result: Swift.String? = nil, sourceOfFunds: AliPaymentGateway.SourceOfFunds? = nil, status: Swift.String? = nil, token: Swift.String? = nil, usage: AliPaymentGateway.Usages? = nil, verificationStrategy: Swift.String? = nil)
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct RetCard : Swift.Codable {
+  public let brand: Swift.String?
+  public let expiry: Swift.String?
+  public let fundingMethod: Swift.String?
+  public let number: Swift.String?
+  public let scheme: Swift.String?
+  public init(brand: Swift.String? = nil, expiry: Swift.String? = nil, fundingMethod: Swift.String? = nil, number: Swift.String? = nil, scheme: Swift.String? = nil)
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public protocol APG {
+  var allPaymentStoreUseCase: AliPaymentGateway.AllPaymentStoreUseCase { get }
+}
+@_hasMissingDesignatedInitializers public class APGImplementation : AliPaymentGateway.APG {
+  public static var shared: AliPaymentGateway.APG {
+    get
+  }
+  public var allPaymentStoreUseCase: AliPaymentGateway.AllPaymentStoreUseCase {
+    get
+  }
+  @objc deinit
+}
+public struct paymentDetailsData : Swift.Encodable {
+  public var merchantId: Swift.String
+  public var usrname: Swift.String
+  public var password: Swift.String
+  public var apiKey: Swift.String
+  public var orderId: Swift.String
+  public var totalPrice: Swift.String
+  public var currencyCode: Swift.String
+  public var testMode: Swift.String
+  public var success_url: Swift.String
+  public var error_url: Swift.String
+  public var customerFullName: Swift.String
+  public var customerEmail: Swift.String
+  public var customerMobile: Swift.String
+  public var productTitle: Swift.String
+  public var productName: Swift.String
+  public var productPrice: Swift.String
+  public var productQty: Swift.String
+  public var reference: Swift.String
+  public var notifyURL: Swift.String
+  public var whiteLabeled: Swift.Bool
+  public init()
+  public func encode(to encoder: Swift.Encoder) throws
+}
+public struct PaymentResponse {
+  public var message: Swift.String
+  public var transectionDetails: AliPaymentGateway.Transaction_Details
+}
+public struct Transaction_Details : Swift.Encodable {
+  public func encode(to encoder: Swift.Encoder) throws
+}
+extension Swift.Encodable {
+  public func toJSON() -> [Swift.String : Any]
+}
+public struct CheckPaymentButtonStatusResponse : Swift.Codable {
+  public let status: Swift.Bool?
+  public let message: Swift.String?
+  public let data: AliPaymentGateway.CheckButtonData?
+  public init(status: Swift.Bool? = nil, message: Swift.String? = nil, data: AliPaymentGateway.CheckButtonData? = nil)
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct CheckButtonData : Swift.Codable {
+  public let payButtons: [Swift.String : Swift.Bool]?
+  public init(payButtons: [Swift.String : Swift.Bool]? = nil)
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct PaymentStatusResponse : Swift.Codable {
+  public let status: Swift.Bool?
+  public let message: Swift.String?
+  public let data: AliPaymentGateway.PaymentStatusData?
+  public init(status: Swift.Bool? = nil, message: Swift.String? = nil, data: AliPaymentGateway.PaymentStatusData? = nil)
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct PaymentStatusData : Swift.Codable {
+  public let transaction: AliPaymentGateway.Transaction?
+  public init(transaction: AliPaymentGateway.Transaction? = nil)
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct Transaction : Swift.Codable {
+  public let order_id: Swift.String?
+  public let refund_order_id: Swift.String?
+  public let payment_id: Swift.String?
+  public let result: Swift.String?
+  public let track_id: Swift.String?
+  public let transaction_date: Swift.String?
+  public let is_save_card: Swift.Bool?
+  public let from_plugin: Swift.Bool?
+  public let product_details: Swift.String?
+  public let reference: Swift.String?
+  public let total_price: Swift.String?
+  public let currency_type: Swift.String?
+  public let status: Swift.String?
+  public let session_id: Swift.String?
+  public let error_url: Swift.String?
+  public let success_url: Swift.String?
+  public let redirect_url: Swift.String?
+  public let notify_url: Swift.String?
+  public let notify_url_called: Swift.Bool?
+  public let notify_url_response: Swift.String?
+  public let whitelabled: Swift.Bool?
+  public let customer_id: Swift.Int?
+  public let customer_unq_id: Swift.String?
+  public let merchant_requested_order_id: Swift.String?
+  public let extra_merchants_data: Swift.String?
+  public let total_paid_non_kwd: Swift.String?
+  public let is_paid_from_knet: Swift.Bool?
+  public let is_paid_from_cc: Swift.Bool?
+  public let is_from_nbk: Swift.Bool?
+  public let customer_extra_data: Swift.String?
+  public let created_at: Swift.String?
+  public init(order_id: Swift.String? = nil, refund_order_id: Swift.String? = nil, payment_id: Swift.String? = nil, result: Swift.String? = nil, track_id: Swift.String? = nil, transaction_date: Swift.String? = nil, is_save_card: Swift.Bool? = nil, from_plugin: Swift.Bool? = nil, product_details: Swift.String? = nil, reference: Swift.String? = nil, total_price: Swift.String? = nil, currency_type: Swift.String? = nil, status: Swift.String? = nil, session_id: Swift.String? = nil, error_url: Swift.String? = nil, success_url: Swift.String? = nil, redirect_url: Swift.String? = nil, notify_url: Swift.String? = nil, notify_url_called: Swift.Bool? = nil, notify_url_response: Swift.String? = nil, whitelabled: Swift.Bool? = nil, customer_id: Swift.Int? = nil, customer_unq_id: Swift.String? = nil, merchant_requested_order_id: Swift.String? = nil, extra_merchants_data: Swift.String? = nil, total_paid_non_kwd: Swift.String? = nil, is_paid_from_knet: Swift.Bool? = nil, is_paid_from_cc: Swift.Bool? = nil, is_from_nbk: Swift.Bool? = nil, customer_extra_data: Swift.String? = nil, created_at: Swift.String? = nil)
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public protocol UseCase {
+}
+public struct AddCardRequest : Swift.Codable {
+  public var card: AliPaymentGateway.Cards?
+  public var customerUniqueToken: Swift.Int?
+  public init(card: AliPaymentGateway.Cards? = nil, customerUniqueToken: Swift.Int? = nil)
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct Expiry : Swift.Codable {
+  public var month: Swift.String?
+  public var year: Swift.String?
+  public init(month: Swift.String? = nil, year: Swift.String? = nil)
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct Cards : Swift.Codable {
+  public var number: Swift.String?
+  public var expiry: AliPaymentGateway.Expiry?
+  public var securityCode: Swift.String?
+  public var nameOnCard: Swift.String?
+  public init(number: Swift.String? = nil, expiry: AliPaymentGateway.Expiry? = nil, securityCode: Swift.String? = nil, nameOnCard: Swift.String? = nil)
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct AddCardResponse : Swift.Codable {
+  public let status: Swift.Bool?
+  public let message: Swift.String?
+  public let data: AliPaymentGateway.Dataa?
+  public init(status: Swift.Bool? = nil, message: Swift.String? = nil, data: AliPaymentGateway.Dataa? = nil)
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct Cardss : Swift.Codable {
+  public let brand: Swift.String?
+  public let expiry: Swift.String?
+  public let fundingMethod: Swift.String?
+  public let number: Swift.String?
+  public let scheme: Swift.String?
+  public init(brand: Swift.String? = nil, expiry: Swift.String? = nil, fundingMethod: Swift.String? = nil, number: Swift.String? = nil, scheme: Swift.String? = nil)
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct CardData : Swift.Codable {
+  public let repositoryId: Swift.String?
+  public let response: AliPaymentGateway.Response?
+  public let result: Swift.String?
+  public let sourceOfFunds: AliPaymentGateway.SourceOfFunds?
+  public let status: Swift.String?
+  public let token: Swift.String?
+  public let usage: AliPaymentGateway.Usage?
+  public let verificationStrategy: Swift.String?
+  public init(repositoryId: Swift.String? = nil, response: AliPaymentGateway.Response? = nil, result: Swift.String? = nil, sourceOfFunds: AliPaymentGateway.SourceOfFunds? = nil, status: Swift.String? = nil, token: Swift.String? = nil, usage: AliPaymentGateway.Usage? = nil, verificationStrategy: Swift.String? = nil)
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct Dataa : Swift.Codable {
+  public let cardData: AliPaymentGateway.CardData?
+  public init(cardData: AliPaymentGateway.CardData? = nil)
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct Provided : Swift.Codable {
+  public let card: AliPaymentGateway.Cardss?
+  public init(card: AliPaymentGateway.Cardss? = nil)
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct Response : Swift.Codable {
+  public let gatewayCode: Swift.String?
+  public init(gatewayCode: Swift.String? = nil)
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct SourceOfFunds : Swift.Codable {
+  public let provided: AliPaymentGateway.Provided?
+  public let type: Swift.String?
+  public init(provided: AliPaymentGateway.Provided? = nil, type: Swift.String? = nil)
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct Usage : Swift.Codable {
+  public let lastUpdated: Swift.String?
+  public let lastUpdatedBy: Swift.String?
+  public let lastUsed: Swift.String?
+  public init(lastUpdated: Swift.String? = nil, lastUpdatedBy: Swift.String? = nil, lastUsed: Swift.String? = nil)
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public class SecretsManager {
+  public init(key: Swift.String)
+  public func readSecret() -> Swift.String?
+  public func apiCall()
+  @objc deinit
+}
+extension AliPaymentGateway.HUHttpMethods : Swift.Equatable {}
+extension AliPaymentGateway.HUHttpMethods : Swift.Hashable {}
+extension AliPaymentGateway.HUHttpMethods : Swift.RawRepresentable {}
